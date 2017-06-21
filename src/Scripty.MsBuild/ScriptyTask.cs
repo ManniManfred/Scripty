@@ -30,6 +30,8 @@ namespace Scripty.MsBuild
 
         public string CustomProperties { get; set; }
 
+        public string CustomReferences { get; set; }
+
         public ITaskItem[] ScriptFiles { get; set; }
 
         [Output]
@@ -186,11 +188,12 @@ namespace Scripty.MsBuild
                     .Distinct()
                     .ToList(),
                 SolutionFilePath = SolutionFilePath?.Contains("*Undefined*") == true ? null : SolutionFilePath,
-                CustomProperties = GetCustomProperties()
+                CustomProperties = GetCustomProperties(),
+                CustomReferences = Utils.AsList(CustomReferences)
             };
             return JsonConvert.SerializeObject(settings);
         }
-
+        
         private IDictionary<string, string> GetCustomProperties()
         {
             if (CustomProperties == null)

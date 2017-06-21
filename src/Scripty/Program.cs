@@ -90,6 +90,7 @@ namespace Scripty
 
             ScriptEngine engine = new ScriptEngine(projectFilePath, solutionFilePath,
 							_settings.Properties, _settings.CustomProperties);
+            engine.CustomReferences = _settings.CustomReferences;
 
             // Get script files if none were specified
             IReadOnlyList<string> finalScriptFilePaths;

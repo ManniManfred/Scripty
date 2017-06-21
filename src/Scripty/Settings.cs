@@ -12,9 +12,10 @@ namespace Scripty
         public string ProjectFilePath = null;
         public string SolutionFilePath = null;
         public IReadOnlyList<string> ScriptFilePaths = null;
+        public IReadOnlyList<string> CustomReferences = null;
         public IReadOnlyDictionary<string, string> Properties = null;
 		public IReadOnlyDictionary<string, string> CustomProperties = null;
-		public bool Attach = false;
+        public bool Attach = false;
 
         private IReadOnlyList<KeyValuePair<string, string>> _properties = null;
 
@@ -27,6 +28,7 @@ namespace Scripty
                 syntax.DefineOptionList("p", ref _properties, ParseProperty, "The build properties.");
                 syntax.DefineParameter(nameof(ProjectFilePath), ref ProjectFilePath, "The full path of the project file.");
                 syntax.DefineParameterList(nameof(ScriptFilePaths), ref ScriptFilePaths, "The path(s) of script files to evaluate (can be absolute or relative to the project).");
+                syntax.DefineParameterList(nameof(CustomReferences), ref CustomReferences, "References that this script should use.");
             });
 
             if (_properties != null)

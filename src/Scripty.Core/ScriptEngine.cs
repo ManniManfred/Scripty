@@ -54,6 +54,8 @@ namespace Scripty.Core
 
         public ProjectRoot ProjectRoot { get; }
 
+        public IEnumerable<string> CustomReferences { get; set; }
+
         public async Task<ScriptResult> Evaluate(ScriptSource source)
         {
             var resolver = new InterceptDirectiveResolver();
@@ -78,7 +80,10 @@ namespace Scripty.Core
                 .WithReferences(assembliesToRef)
                 .WithImports(namepspaces)
                 .WithSourceResolver(resolver);
-            
+
+            if (CustomReferences != null)
+                options = options.AddReferences(CustomReferences);
+
             using (ScriptContext context = GetContext(source.FilePath))
             {
                 try
