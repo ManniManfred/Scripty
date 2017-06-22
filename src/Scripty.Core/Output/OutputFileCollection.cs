@@ -53,27 +53,37 @@ namespace Scripty.Core.Output
         {
             get
             {
-                if (_disposed)
-                {
-                    throw new ObjectDisposedException(nameof(OutputFileCollection));
-                }
-                if (string.IsNullOrEmpty(filePath))
-                {
-                    throw new ArgumentException("Value cannot be null or empty", nameof(filePath));
-                }
-
-                filePath = Path.Combine(Path.GetDirectoryName(_scriptFilePath), filePath);
-                OutputFileWriter outputFile;
-                if (!_outputFiles.TryGetValue(filePath, out outputFile))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-                    outputFile = new OutputFileWriter(filePath);
-                    _outputFiles.Add(filePath, outputFile);
-                }
-                return outputFile;
+                return GetOutputFile(filePath);
             }
         }
 
+        public OutputFile GetDummyFile(string filePath)
+        {
+            return GetOutputFile(filePath, new StringWriter(new StringBuilder()));
+        }
+
+        private OutputFile GetOutputFile(string filePath, TextWriter textWriter = null)
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(OutputFileCollection));
+            }
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentException("Value cannot be null or empty", nameof(filePath));
+            }
+
+            filePath = Path.Combine(Path.GetDirectoryName(_scriptFilePath), filePath);
+            OutputFileWriter outputFile;
+            if (!_outputFiles.TryGetValue(filePath, out outputFile))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                outputFile = new OutputFileWriter(textWriter, filePath);
+                _outputFiles.Add(filePath, outputFile);
+            }
+            return outputFile;
+        }
+        
         internal ICollection<IOutputFileInfo> OutputFiles => _outputFiles.Values.Cast<IOutputFileInfo>().ToList();
 
         public override string FilePath => _filePath;

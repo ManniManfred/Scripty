@@ -19,13 +19,15 @@ namespace Scripty.Core.Output
             FilePath = filePath;
             _buildAction = Path.GetExtension(filePath) == ".cs" ? BuildAction.Compile : BuildAction.None;
         }
-
-        // Used for testing
-        internal OutputFileWriter(TextWriter textWriter)
+        
+        internal OutputFileWriter(TextWriter textWriter, string filePath = null)
         {
-            _textWriter = textWriter;
-            FilePath = null;
-            _buildAction = BuildAction.None;
+            _textWriter = textWriter ?? new StreamWriter(filePath);
+            FilePath = filePath;
+
+            _buildAction = filePath != null && Path.GetExtension(filePath) == ".cs" 
+                ? BuildAction.Compile
+                : BuildAction.None;
         }
 
         protected override void Dispose(bool disposing)
