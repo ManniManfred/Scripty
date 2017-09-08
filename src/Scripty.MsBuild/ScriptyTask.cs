@@ -189,7 +189,9 @@ namespace Scripty.MsBuild
                     .ToList(),
                 SolutionFilePath = SolutionFilePath?.Contains("*Undefined*") == true ? null : SolutionFilePath,
                 CustomProperties = GetCustomProperties(),
-                CustomReferences = Utils.AsList(CustomReferences)
+                CustomReferences = CustomReferences == null 
+                    ? (IList<string>)new string[0]
+                    : Utils.AsList(CustomReferences)
             };
             return JsonConvert.SerializeObject(settings);
         }
